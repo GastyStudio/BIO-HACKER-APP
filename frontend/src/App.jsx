@@ -1,0 +1,93 @@
+import { useState, useEffect } from 'react' // Importamos useEffect
+
+function App() {
+  const [form, setForm] = useState({ peso: 80, intensidad: 5, temperatura: 25, hora: 10 });
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      calcular();
+    }, 500); 
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [form]); 
+
+  const calcular = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/calcular', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white p-6 flex flex-col items-center font-sans">
+      <header className="mb-8 text-center">
+        <h1 className="text-4xl font-black italic tracking-tighter">BIO<span className="text-blue-500">HACKER</span> APP</h1>
+        <p className="text-zinc-500 font-mono text-[10px] tracking-[0.2em]">REAL-TIME ENGINE // V1.0</p>
+      </header>
+
+      <main className="w-full max-w-md bg-zinc-900 border border-zinc-800 p-8 rounded-[2.5rem] shadow-2xl">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {/* Inputs con Number() para asegurar que Python reciba números */}
+          <Input label="Peso (kg)" value={form.peso} 
+            onChange={(e) => setForm({...form, peso: Number(e.target.value)})} />
+          <Input label="Intensidad (1-10)" value={form.intensidad} 
+            onChange={(e) => setForm({...form, intensidad: Number(e.target.value)})} />
+          <Input label="Temp (°C)" value={form.temperatura} 
+            onChange={(e) => setForm({...form, temperatura: Number(e.target.value)})} />
+          <Input label="Hora (0-24)" value={form.hora} 
+            onChange={(e) => setForm({...form, hora: Number(e.target.value)})} />
+        </div>
+
+        {/* El botón ahora es opcional o puede servir para "forzar" un refresco */}
+        <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden mb-6">
+            <div className="h-full bg-blue-500 animate-pulse w-full"></div>
+        </div>
+
+        {data && (
+          <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <ResultCard label="⚡ Pre-Carbos" value={`${data.pre}g`} color="text-blue-400" />
+            <ResultCard label="🧂 Sodio" value={`${data.sodio}mg`} color="text-yellow-500" />
+            <ResultCard label="🔄 Post-Carbos" value={`${data.post}g`} color="text-green-400" />
+            
+            <div className="bg-zinc-800/50 p-4 rounded-xl border border-zinc-700/50 mt-4 text-center">
+              <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Suplementación</p>
+              <p className="text-sm font-bold text-orange-400 font-mono">
+                {data.cafeina}mg Cafeína <br/> 
+                <span className="text-[10px]">{data.alerta}</span>
+              </p>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
+
+function Input({ label, value, onChange }) {
+  return (
+    <div className="flex flex-col">
+      <label className="text-[10px] uppercase text-zinc-500 mb-1 ml-1">{label}</label>
+      <input type="number" value={value} onChange={onChange}
+        className="bg-zinc-800 border border-zinc-700 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+    </div>
+  )
+}
+
+function ResultCard({ label, value, color }) {
+  return (
+    <div className="flex justify-between items-center bg-zinc-800/30 p-4 rounded-2xl border border-zinc-800">
+      <span className="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">{label}</span>
+      <span className={`text-xl font-mono font-black ${color}`}>{value}</span>
+    </div>
+  )
+}
+
+export default App
