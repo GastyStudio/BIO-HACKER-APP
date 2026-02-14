@@ -1,20 +1,12 @@
-import { useState, useEffect } from 'react' // Importamos useEffect
+import { useState, useEffect, useCallback } from 'react' // Importamos useEffect
 
 function App() {
   const [form, setForm] = useState({ peso: 80, intensidad: 5, temperatura: 25, hora: 10 });
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      calcular();
-    }, 500); 
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [form]); 
-
-  const calcular = async () => {
+  const calcular = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/calcular', {
+      const response = await fetch('http://127.0.0.1:4040 /calcular', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -24,7 +16,15 @@ function App() {
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  }, [form]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      calcular();
+    }, 500); 
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [form, calcular]);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-6 flex flex-col items-center font-sans">
