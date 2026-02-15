@@ -4,10 +4,10 @@ from pydantic import BaseModel
 
 app = FastAPI(title="Bio-Hacker Fitness API")
 
-# IMPORTANTE: Esto permite que tu frontend en React se comunique con Python
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["*"],  # En producción, cambia "*" por tu URL de Vercel (ej: "https://mi-app.vercel.app")
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
