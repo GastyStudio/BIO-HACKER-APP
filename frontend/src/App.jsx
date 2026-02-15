@@ -21,17 +21,7 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (showSplash) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50 animate-in fade-in duration-700">
-        <img
-          src="/logo.png"
-          alt="Bio Hacker Logo"
-          className="w-3/4 max-w-sm object-contain animate-pulse"
-        />
-      </div>
-    );
-  }
+
 
   const calcular = useCallback(async () => {
     if (!form.peso || form.peso === 0) return;
@@ -55,6 +45,18 @@ function App() {
     }
   }, [form]);
 
+
+  if (showSplash) {
+    return (
+      <div className="fixed inset-0 bg-black flex items-center justify-center z-50 animate-in fade-in duration-700">
+        <img
+          src="/logo.png"
+          alt="Bio Hacker Logo"
+          className="w-3/4 max-w-sm object-contain animate-pulse"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-6 flex flex-col items-center font-sans">
