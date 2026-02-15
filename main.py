@@ -6,7 +6,7 @@ app = FastAPI(title="Bio-Hacker Fitness API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, cambia "*" por tu URL de Vercel (ej: "https://mi-app.vercel.app")
+    allow_origins=["https://bio-hacker-app.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
