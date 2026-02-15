@@ -10,7 +10,7 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await fetch(' https://untranspiring-elena-detachedly.ngrok-free.dev/calcular', {
+      const response = await fetch('https://bio-hacker-app.onrender.com/calcular', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
